@@ -206,3 +206,65 @@
 1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_45.csv
 1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_44.csv
 1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_43.csv
+1. Sample Code/2. Pred Signals/1. GAMs/gauss_rolling_pred.RData
+1. Sample Code/2. Pred Signals/1. GAMs/gauss_rolling_pred_more_knots.RData
+1. Sample Code/2. Pred Signals/1. GAMs/gauss_rolling_pred_more_knots_factor.RData
+1. Sample Code/2. Pred Signals/1. GAMs/gauss_rolling_pred_with_trend.RData
+1. Sample Code/2. Pred Signals/1. GAMs/gev_rolling_pred_more_knots_factor.RData
+1. Sample Code/2. Pred Signals/1. GAMs/high_res_rolling_bam.RData
+1. Sample Code/2. Pred Signals/1. GAMs/high_res_rolling_more_knots_pred.RData
+1. Sample Code/2. Pred Signals/1. GAMs/high_res_rolling_pred.RData
+1. Sample Code/2. Pred Signals/1. GAMs/high_res_rolling_with_interactions_pred.RData
+1. Sample Code/2. Pred Signals/1. GAMs/low_resolution_ocat.RData
+1. Sample Code/2. Pred Signals/1. GAMs/MR_gauss_rolling_pred.RData
+1. Sample Code/2. Pred Signals/1. GAMs/MR_gauss_rolling_pred_more_knots.RData
+1. Sample Code/2. Pred Signals/1. GAMs/MR_gauss_rolling_pred_more_knots_factor.RData
+1. Sample Code/2. Pred Signals/1. GAMs/MR_gauss_rolling_pred_with_trend.RData
+1. Sample Code/2. Pred Signals/1. GAMs/MR_rolling_pred.RData
+1. Sample Code/2. Pred Signals/1. GAMs/MR_rolling_pred_more_knots.RData
+1. Sample Code/2. Pred Signals/1. GAMs/MR_rolling_pred_more_knots_factor.RData
+1. Sample Code/2. Pred Signals/1. GAMs/MR_rolling_pred_with_trend.RData
+1. Sample Code/2. Pred Signals/1. GAMs/MR_scat_rolling_pred.RData
+1. Sample Code/2. Pred Signals/1. GAMs/MR_scat_rolling_pred_factor.RData
+1. Sample Code/2. Pred Signals/1. GAMs/ocat_rolling_pred.RData
+1. Sample Code/2. Pred Signals/1. GAMs/ocat_rolling_pred_more_knots.RData
+1. Sample Code/2. Pred Signals/1. GAMs/QGAM_rolling_pred.RData
+1. Sample Code/2. Pred Signals/1. GAMs/scat_rolling_pred_more_knots_factor.RData
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_0.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_1.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_10.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_11.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_12.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_13.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_14.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_15.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_16.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_17.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_18.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_19.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_2.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_20.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_21.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_22.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_23.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_24.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_25.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_26.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_27.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_28.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_29.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_3.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_30.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_31.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_32.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_33.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_34.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_35.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_36.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_37.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_38.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_39.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_4.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_40.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_41.csv
+1. Sample Code/2. Pred Signals/2. NNs/1. FC/fitted/high-resolution_FC_rolling_42.csv
