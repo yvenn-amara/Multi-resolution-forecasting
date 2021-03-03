@@ -89,6 +89,38 @@ return(list(datMxLearn,datMxTest,DataLearn,DataTest))
 
 #### 1. Training Framework ####
 
+arima_rolling = function(df){
+  ym_unique = unique(df$ym)
+  
+  pred_signal = NULL
+  models = list()
+
+  for(i in 12:(length(ym_unique)-1)){
+    print(paste("Iteration",i-11))
+    
+    load_train = df %>%
+      filter(ym %in% ym_unique[1:i]) %>%
+      select(load) %>%
+      as.matrix(.)
+    
+    model = auto.arima(ts(load_train,frequency=1))
+    models[[i-11]] = model
+    
+    refit = Arima(df %>%
+                    filter(ym %in% ym_unique[1:(i+1)]) %>%
+                    select(load) %>%
+                    as.matrix(.),
+                  model=model)
+    
+    pred_signal = c(pred_signal,refit$fitted[(nrow(load_train)+1):nrow(refit$fitted)]) 
+    
+  }
+  
+  return(list(pred_signal,models))
+  
+}
+
+
 rolling_origin = function(df, model_function, family = 'gauss'){
   
   ym_unique = unique(df$ym)
@@ -161,7 +193,7 @@ rolling_origin = function(df, model_function, family = 'gauss'){
       }
       
       else{
-        pred_signal = c(pred_signal,predict(model_function(filtered_df), df %>% filter(ym == ym_unique[i+1]))) 
+        pred_signal = c(pred_signal,predict(model, df %>% filter(ym == ym_unique[i+1]))) 
       }
       
       }
@@ -257,17 +289,33 @@ high_res_to_peak = function(DataTest,high_res_pred){
 
 #### 4. Performance Metrics ####
 
+loss_mape = function(y_true,y_pred){
+  return(100*(abs((y_true-y_pred)/y_true)))
+}
+
 mape = function(y_true,y_pred){
   return(100*mean(abs((y_true-y_pred)/y_true)))
+}
+
+sd_mape = function(y_true,y_pred){
+  l_bar = mape(y_true,y_pred)
+  return(sqrt(mean((100*(abs((y_true-y_pred)/y_true))-l_bar)^2)))
 }
 
 mae = function(y_true,y_pred){
   return(mean(abs(y_true-y_pred)))
 }
 
+sd_mae = function(y_true,y_pred){
+  l_bar = mae(y_true,y_pred)
+  return(sqrt(mean((abs(y_true-y_pred)-l_bar)^2)))
+}
+
 rmse = function(y_true,y_pred){
   return(sqrt(mean((y_true-y_pred)^2)))
 }
+
+
 
 acc = function(y_true,y_pred){
   temp = (y_true == y_pred)
@@ -276,14 +324,12 @@ acc = function(y_true,y_pred){
 
 AIC_metric_GAM = function(mod_list){
   
-  df_AIC = tibble(window = 1:48, mis_AIC=0, AIC=0)
+  df_AIC = tibble(window = 1:48, AIC=0)
   
   for(i in 1:48){
     observed = mod_list[[2]][[i]]$y
     fitted = mod_list[[2]][[i]]$fitted.values
     parameters = length(mod_list[[2]][[i]]$coefficients)
-    df_AIC$mis_AIC[i]=mis_AIC(observed,fitted,parameters)
-    
     df_AIC$AIC[i]=AIC(mod_list[[2]][[i]])
   }
   return(df_AIC)
@@ -365,9 +411,21 @@ last_year = function(df){
   df = df %>%
     filter(ymd >= "2015-07-01")
   
-  print(paste("MAPE:",mape(df$load,df$pred)))
-  print(paste("MAE:",mae(df$load,df$pred)))
+  print(paste("MAPE:",mape(df$load,df$pred), "sd:", sd_mape(df$load,df$pred)))
+  print(paste("MAE:",mae(df$load,df$pred), "sd:", sd_mae(df$load,df$pred)))
   print(paste("RMSE:",rmse(df$load,df$pred)))
+}
+
+last_year_sd = function(df){
+  df = df %>%
+    filter(ymd >= "2015-07-01")
+  
+  print(paste("MAPE-sd:",sd(df$mape)))
+  
+  
+  
+  print(paste("MAE-sd:",sd(df$mae)))
+  print(paste("RMSE-sd:",sd(df$rmse)))
 }
 
 last_year_instant = function(df){
@@ -380,6 +438,16 @@ last_year_instant = function(df){
   print(paste("MAE:",mae(df$todFrom1,df$pred)))
 }
 
+last_year_instant_sd = function(df){
+  df = df %>%
+    filter(ymd >= "2015-07-01")
+  
+  print(paste("Accuracy:",sd(df$acc)))
+  print(paste("MAPE:",sd(df$mape)))
+  print(paste("MAE:",sd(df$mae)))
+  print(paste("RMSE:",sd(df$rmse)))
+}
+
 ##### 5. Plots 
 
 plot_metrics=function(dataset, metric){
@@ -387,21 +455,32 @@ plot_metrics=function(dataset, metric){
   cbPalette = c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7","#000000","#994F00")
   
   if (metric=="mape") {
-    ggplot(dataset, aes(ymd, group=Model, colour=Model)) + 
-      geom_line(aes(y=rolling_mape), size = 1.5) +
-      geom_point(aes(y=rolling_mape), size = 3) +
+    ggplot(dataset, aes(ymd, group=Model, colour=Model, shape=Model)) + 
+      geom_line(aes(y=rolling_mape, linetype = Model)) +
+      geom_point(aes(y=rolling_mape),size=2) +
       xlab('Month') +
       ylab('Rolling MAPE') +
-      theme_minimal() +
-      theme(legend.title=element_text(size=30),
-            legend.text=element_text(size=24),
-            axis.title = element_text(size=24),
-            axis.text = element_text(size=24)) +
-      scale_colour_manual(values=cbPalette)# +
-      #scale_shape_manual(values=c(4,8,15,16,17,18,21,22,3,42))
+      theme_Publication() +
+      # theme(legend.title=element_text(size=30),
+      #       legend.position = c(.95, .95),
+      #       legend.justification = c("right", "top"),
+      #       legend.box.just = "right",
+      #       legend.margin = margin(6, 6, 6, 6),
+      #       legend.text=element_text(size=24),
+      #       axis.title = element_text(size=24),
+      #       axis.text = element_text(size=24),
+      #       axis.ticks = element_line(colour = "black", size = 0.2),
+      #       panel.grid.major = element_line(colour = "black", size = 0.2,linetype="dashed"),
+      #       panel.grid.minor = element_blank()) +
+      # scale_colour_manual(values=cbPalette) +
+      scale_shape_manual(values=c(15,15,15,16,16,16,17,17,18)) +
+      scale_y_continuous(breaks = round(seq(0, max(dataset$rolling_mape), by = 0.5),1)) +
+      scale_linetype_manual(values=c("solid","longdash","dashed","solid","longdash","dashed","solid","longdash","solid"))
+    
+    
   } else if (metric=="rmse"){
     ggplot(dataset, aes(ymd, group=Model, colour=Model)) + 
-      geom_line(aes(y=rolling_rmse), size = 1.5) +
+      geom_line(aes(y=rolling_rmse, linetype = Model), size = 2.5) +
       geom_point(aes(y=rolling_rmse), size = 3) +
       xlab('Month') +
       ylab('Rolling RMSE') +
@@ -476,5 +555,44 @@ plot_metrics=function(dataset, metric){
   
   
 }
+
+#### Theme inspired from https://github.com/koundy/ggplot_theme_Publication/blob/master/R/ggplot_theme_Publication.R#L7
+theme_Publication = function(base_size=14, base_family="sans") {
+  library(grid)
+  library(ggthemes)
+  (theme_foundation(base_size=base_size, base_family=base_family)
+    + theme(plot.title = element_text(face = "bold",
+                                      size = rel(1.2), hjust = 0.5),
+            text = element_text(),
+            panel.background = element_rect(colour = NA),
+            plot.background = element_rect(colour = NA),
+            panel.border = element_rect(colour = NA),
+            axis.title = element_text(face = "bold",size = rel(1)),
+            axis.title.y = element_text(angle=90,vjust =2),
+            axis.title.x = element_text(vjust = -0.2),
+            axis.text = element_text(), 
+            axis.line.x = element_line(colour="black"),
+            axis.line.y = element_line(colour="black"),
+            axis.ticks = element_line(),
+            #panel.grid.major = element_line(colour="#f0f0f0"),
+            panel.grid.minor = element_blank(),
+            legend.key = element_rect(colour = NA),
+            legend.position = c(.95, .95),
+            legend.justification = c("right", "top"),
+            legend.box.just = "right",
+            #legend.position = "bottom",
+            #legend.direction = "horizontal",
+            #legend.key.size= unit(0.2, "cm"),
+            legend.key.size= unit(1, "cm"),
+            legend.margin = margin(6, 6, 6, 6),
+            legend.title = element_text(face="italic"),
+            panel.grid.major = element_line(colour = "black", size = 0.2,linetype="dashed"),
+            plot.margin=unit(c(10,5,5,5),"mm"),
+            strip.background=element_rect(colour="#f0f0f0",fill="#f0f0f0"),
+            strip.text = element_text(face="bold")
+    ))
+  
+}
+
 
 ######### END

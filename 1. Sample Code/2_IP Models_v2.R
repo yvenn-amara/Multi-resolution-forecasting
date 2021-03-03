@@ -14,10 +14,10 @@ library(dplyr)
 library(mvnfast)
 library(rstudioapi)
 library(gridExtra)
-source("99_Utility_v2.R")
 
 # Working directory to be changed adequately
 setwd("C:/Users/yvenn/OneDrive/Bureau/Thèse/10. Articles/3. GitHub/Multi-resolution-forecasting/1. Sample Code") 
+source("99_Utility_v3.R")
 
 #### 1. Data Prepartion ####
 
@@ -71,17 +71,19 @@ lr_ocat_rolling_pred = rolling_origin(datMxLearn, low_resolution_ocat, family="o
 
 #### High-resolution ####
 
+persistence_metrics = metrics_over_time_instant(datMxTest %>% mutate(pred = datMxTest$tod24 + 1), model='Persistence', res='NA')
+
 ## Gaussian
 load("2. Pred Signals/1. GAMs/high_res_rolling_bam.RData")
 test_and_pred = high_res_to_peak(DataTest, high_res_pred[[1]])
-last_year_instant(test_and_pred) #Acc: 17.4 %, MAPE:  7.99, RMSE: 4.81 MW, MAE 2.48 MW 
+last_year_instant(test_and_pred) #Acc: 56.2 %, MAPE:  6.59, RMSE: 4.59 MW, MAE 2.01 MW 
 HR_gauss_metrics = metrics_over_time_instant(datMxTest %>% mutate(pred = test_and_pred$pred), model='HR-Gauss', res='HR')
-
+# last_year_instant_sd(HR_gauss_metrics) 
 
 # FCNN
 HRFCNN = as.vector(as.matrix(read.csv("2. Pred Signals/2. NNs/1. FC/high-resolution_FC_rolling_pred.csv",header=F)))
 test_and_pred = high_res_to_peak(DataTest, HRFCNN)
-last_year_instant(test_and_pred) #Acc: 10.3 %, MAPE: 8.07 %, RMSE: 4.63 MW, MAE: 2.53 MW 
+last_year_instant(test_and_pred) #Acc: 58.8 %, MAPE: 8.07 %, RMSE: 4.39 MW, MAE: 1.93 MW 
 HRFCNN_metrics = metrics_over_time_instant(datMxTest %>% mutate(pred = test_and_pred$pred), model='HR-FCNN', res='HR')
 
 #### Low-resolution ####
@@ -116,13 +118,27 @@ test_and_pred = datMxTest %>% mutate(pred = MRCNN)
 last_year_instant(test_and_pred) #Acc: 60.9 %, MAPE: 5.82 %, RMSE: 3.85 MW, MAE: 1.7 MW 
 MRCNN_metrics = metrics_over_time_instant(datMxTest %>% mutate(pred = test_and_pred$pred), model='MR-CNN', res='MR')
 
-
 ## Plots
 all = bind_rows(HRFCNN_metrics,LRFCNN_metrics,MRCNN_metrics,
-                HR_gauss_metrics,LR_ocat_metrics,MR_ocat_metrics)
+                HR_gauss_metrics,LR_ocat_metrics,MR_ocat_metrics,
+                persistence_metrics)
 
-plot_metrics(all,"acc")
-plot_metrics(all,"mae")
-plot_metrics(all,"rmse")
+cbPalette = c("MR-Ocat"="#999999", "MR-CNN"="#E69F00", 
+              "LR-Ocat"="#56B4E9", "LR-FCNN"="#009E73", 
+              "HR-Gauss"="#0072B2", "HR-FCNN"="#D55E00",
+              "Persistence"="#000000")
+
+
+pdf(file = "./3. Plots/IP_ACC.pdf", width = 11, height = 8)
+plot_metrics_IP(all,"acc",cbPalette)
+dev.off()
+
+pdf(file = "./3. Plots/IP_MAE.pdf", width = 11, height = 8)
+plot_metrics_IP(all,"mae",cbPalette)
+dev.off()
+
+pdf(file = "./3. Plots/IP_RMSE.pdf", width = 11, height = 8)
+plot_metrics_IP(all,"rmse",cbPalette)
+dev.off()
 
 ######### END
